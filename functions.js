@@ -21,16 +21,15 @@ function curry(f, inner_args){
   })(n);
 }
 
-function linearHolder(array, callback,initialValue){
+function linearFolder(array, callback,initialValue){
 	var previousValue = initialValue;
-	var callbackValue;
 	for( var i = 0; i < array.length; i++){
-		callbackValue = callback(previousValue,array[i],i,array);
+		previousValue = callback(previousValue,array[i],i,array);
 	}
-	return callbackValue;
+	return previousValue ;
 }
 
-function linearUnholder(callback,initialValue){
+function linearUnfolder(callback,initialValue){
 	var state = initialValue;
 	var arrayResult = [];
 	while (state !== null){
@@ -53,7 +52,6 @@ function filter(func,array){
 	var newArray = [];
 	for(var i = 0; i< array.length; i++){
 		if(func(array[i])){
-			console.log(array[i]);
 			newArray.push(array[i]);
 		}
 	}
@@ -65,32 +63,40 @@ function getAverangeEvenNumbers(array){
 	return arr;
 }
 
-function first(array, condition){
+function getSum(array){
+	return linearFolder(array,function(prev,current,index,array){ return prev + current;},0);
+}
+
+function first(condition,array){
 	for (var i = 0; i < array.length; i++){
-		if (condition(array[i]){
+		if (condition(array[i]))
 			return array[i];
 	}
 }
 
+
+
 function lazyEvaluation(func){
 	lazyEvaluation = function () {
-	  return variable  = Array.prototype.slice.call(arguments);
+        var variable;
+        return variable = Array.prototype.slice.call(arguments);
 	};
 	return func.apply(this, arguments);
-
 }
 
 function memoization(func){
 	var cache = {};
-	if (arguments[0])
-		var arg = arguments[0];
 	return function(arg){
+		var newArguments;
 		var args = Array.prototype.slice.call(arguments);
+		for (argument in args){
+			
+		}
 		if (arg in cache){
-			console.log(cache[arg]);
+			cache[arg];
 		}
 		else{
-			console.log(cache[arg] =  func.apply(this,args );
+		    cache[arg] =  func.apply(this,args );
 		}
 	}
 }

@@ -5,9 +5,26 @@
     <title>Functional Programming</title>
 </head>
 <body>
+	
 	<script src="./functions.js"></script>
     <script type="text/javascript">
-			
+	   var func = function(x,y,z) { return x+y+z; };
+       var calculate_with_partial_application = partialApplication(func,3);
+       console.log(calculate_with_partial_application(4,2));
+
+       var calculate_with_curring = curry(func);
+       console.log(calculate_with_curring(1)(2)(7)); // 10
+
+       var func1 = function(x){return x+1;};
+       var list = [1,8, 2, 3, 4,5];
+       console.log(calculate_with_map = map(func1,list));
+
+       var func2 = function(x){if (x>3) return x;};
+       console.log(calculate_with_filter = filter(func2,list));
+
+       console.log(calculate_with_first = first(func2,list));
+
+        console.log(getSum(list));
     </script>
 </body>
 </html>
