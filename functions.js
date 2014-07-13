@@ -1,4 +1,6 @@
-function partialApplication(f) {
+function FunctionalTools (){}
+
+FunctionalTools.prototype.partialApplication = function(f) {
     var args = Array.prototype.slice.call(arguments,1);
     return function() {
         var inner_args = Array.prototype.slice.call(arguments);
@@ -6,7 +8,7 @@ function partialApplication(f) {
     };
 };
 
-function curry(f, inner_args){
+FunctionalTools.prototype.curry = function(f, inner_args){
   var args = Array.prototype.slice.call(arguments,1);
   var n = 0;
   return (function curriedFunction(n){
@@ -21,7 +23,7 @@ function curry(f, inner_args){
   })(n);
 }
 
-function linearFolder(array, callback,initialValue){
+FunctionalTools.prototype.linearFolder = function(array, callback,initialValue){
 	var previousValue = initialValue;
 	for( var i = 0; i < array.length; i++){
 		previousValue = callback(previousValue,array[i],i,array);
@@ -29,10 +31,10 @@ function linearFolder(array, callback,initialValue){
 	return previousValue ;
 }
 
-function linearUnfolder(callback,initialValue){
+FunctionalTools.prototype.linearUnFolder = function(callback,initialValue){
 	var state = initialValue;
 	var arrayResult = [];
-	while (state !== null){
+	while (state != null){
 		var tempValue = callback(state);
 		arrayResult.push(tempValue.value);
 		state = tempValue.state;
@@ -40,7 +42,7 @@ function linearUnfolder(callback,initialValue){
 	return arrayResult;
 }
 
-function map(func, array){
+FunctionalTools.prototype.map = function(func, array){
 	var newArray = [];
 	for (var i = 0; i < array.length; i++){
 		newArray[i] = func(array[i]);
@@ -48,7 +50,7 @@ function map(func, array){
 	return newArray;
 }
 
-function filter(func,array){
+FunctionalTools.prototype.filter = function(func,array){
 	var newArray = [];
 	for(var i = 0; i< array.length; i++){
 		if(func(array[i])){
@@ -58,16 +60,16 @@ function filter(func,array){
 	return newArray;
 }
 
-function getAverangeEvenNumbers(array){
-	var arr = filter(function(x){if(x%2===0) return x;},array);
+FunctionalTools.prototype.averangeEvenNumbers = function(array){
+	var arr = FunctionalTools.prototype.filter(function(x){if(x%2===0) return x;},array);
 	return arr;
 }
 
-function getSum(array){
-	return linearFolder(array,function(prev,current,index,array){ return prev + current;},0);
+FunctionalTools.prototype.sumOfRandomNumbers = function(array){
+	return FunctionalTools.prototype.linearFolder(array,function(prev,current,index,array){ return prev + current;},0);
 }
 
-function first(condition,array){
+FunctionalTools.prototype.first = function(condition,array){
 	for (var i = 0; i < array.length; i++){
 		if (condition(array[i]))
 			return array[i];
@@ -76,27 +78,26 @@ function first(condition,array){
 
 
 
-function lazyEvaluation(func){
-	lazyEvaluation = function () {
-        var variable;
-        return variable = Array.prototype.slice.call(arguments);
-	};
-	return func.apply(this, arguments);
+FunctionalTools.prototype.lazyEvaluation = function(func){
+    var variable = Array.prototype.slice.call(arguments,1);
+    var lazyEvaluation = function () {
+        return func(variable);
+    };
+	return lazyEvaluation;
 }
 
-function memoization(func){
+FunctionalTools.prototype.memoization = function(func){
 	var cache = {};
 	return function(arg){
-		var newArguments;
-		var args = Array.prototype.slice.call(arguments);
-		for (argument in args){
-			
-		}
-		if (arg in cache){
-			cache[arg];
-		}
-		else{
-		    cache[arg] =  func.apply(this,args );
-		}
+        if(arg){
+            var args = Array.prototype.slice.call(arguments);
+
+            if (arg in cache){
+                return cache[arg];
+            }
+            else{
+                return cache[arg] =  func.apply(this,args );
+            }
+        }
 	}
 }
