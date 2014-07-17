@@ -1,28 +1,25 @@
-function FunctionalTools() {
-}
+function FunctionalTools() {}
 
-FunctionalTools.prototype.partialApplication = function (f) {
+FunctionalTools.prototype.partialApplication = function (func) {
     var args = Array.prototype.slice.call(arguments, 1);
     return function () {
-        var inner_args = Array.prototype.slice.call(arguments);
-        return f.apply(this, args.concat(inner_args))
+        var innerArgs = Array.prototype.slice.call(arguments);
+        return func.apply(this, args.concat(innerArgs));
     };
 };
 
-FunctionalTools.prototype.curry = function (f, inner_args) {
+FunctionalTools.prototype.curry = function (func) {
     var args = Array.prototype.slice.call(arguments, 1);
-    var n = 0;
-    return (function curriedFunction(n) {
+    return (function curriedFunction() {
         return function () {
-            for (var i = 0; i < arguments.length; i++) args[i + n] = arguments[i];
-            var newArgumentsLength = n + arguments.length;
-            if (newArgumentsLength < f.length)
-                return curriedFunction(newArgumentsLength);
-            args.length = newArgumentsLength;
-            return f.apply(inner_args, args);
+            args = args.concat(Array.prototype.slice.call(arguments));
+            if (args.length < func.length) {
+                return curriedFunction(args.length);
+            }
+            return func.apply(this, args);
         };
-    })(n);
-}
+    })();
+};
 
 FunctionalTools.prototype.linearFolder = function (array, callback, initialValue) {
     var previousValue = initialValue;
@@ -30,7 +27,7 @@ FunctionalTools.prototype.linearFolder = function (array, callback, initialValue
         previousValue = callback(previousValue, array[i], i, array);
     }
     return previousValue;
-}
+};
 
 FunctionalTools.prototype.linearUnFolder = function (callback, initialValue) {
     var state = initialValue;
@@ -41,7 +38,7 @@ FunctionalTools.prototype.linearUnFolder = function (callback, initialValue) {
         state = tempValue.state;
     }
     return arrayResult;
-}
+};
 
 FunctionalTools.prototype.map = function (func, array) {
     var newArray = [];
@@ -49,7 +46,7 @@ FunctionalTools.prototype.map = function (func, array) {
         newArray[i] = func(array[i]);
     }
     return newArray;
-}
+};
 
 FunctionalTools.prototype.filter = function (func, array) {
     var newArray = [];
@@ -59,27 +56,29 @@ FunctionalTools.prototype.filter = function (func, array) {
         }
     }
     return newArray;
-}
+};
 
 FunctionalTools.prototype.averangeEvenNumbers = function (array) {
-    var arr = FunctionalTools.prototype.filter(function (x) {
-        if (x % 2 === 0) return x;
+    return FunctionalTools.prototype.filter(function (x) {
+        if (x % 2 === 0) {
+            return x;
+        }
     }, array);
-    return arr;
-}
+};
 
 FunctionalTools.prototype.sumOfRandomNumbers = function (array) {
-    return FunctionalTools.prototype.linearFolder(array, function (prev, current, index, array) {
+    return FunctionalTools.prototype.linearFolder(array, function (prev, current) {
         return prev + current;
     }, 0);
-}
+};
 
 FunctionalTools.prototype.first = function (condition, array) {
     for (var i = 0; i < array.length; i++) {
-        if (condition(array[i]))
+        if (condition(array[i])){
             return array[i];
+        }
     }
-}
+};
 
 
 FunctionalTools.prototype.lazyEvaluation = function (func) {
@@ -88,20 +87,20 @@ FunctionalTools.prototype.lazyEvaluation = function (func) {
         return func(variable);
     };
     return lazyEvaluation;
-}
+};
 
 FunctionalTools.prototype.memoization = function (func) {
     var cache = {};
     return function (arg) {
         if (arg) {
             var args = Array.prototype.slice.call(arguments);
-
             if (arg in cache) {
                 return cache[arg];
             }
             else {
-                return cache[arg] = func.apply(this, args);
+                cache[arg] = func.apply(this, args);
+                return cache[arg];
             }
         }
-    }
-}
+    };
+};
